@@ -1,8 +1,11 @@
-	# ---- ゲームの参加者を管理するクラス ----
 Member    = require('./womember').WOMember
+RoleManager = require('./worole').RoleManager
+
+# ---- ゲームの参加者を管理するクラス ----
 class WOMembers
 	constructor: () ->
 		@members = []
+		@roleManager = new RoleManager
 
 	getMembers: () ->
 		@members
@@ -21,7 +24,9 @@ class WOMembers
 
 	# メンバーを追加
 	addMember: (memberName) ->
-		@members.push( new Member(memberName) )
+		member = new Member(memberName)
+		member.setRole( @roleManager.popRole() )
+		@members.push( member )
 
 	# メンバーの人数を返す
 	getLength: () ->

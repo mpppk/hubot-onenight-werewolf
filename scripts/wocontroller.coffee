@@ -1,5 +1,6 @@
 WOMember  = require('./womember').WOMember
 WOMembers = require('./womembers').WOMembers
+RoleManager = require('./worole').RoleManager
 
 # ---- WOを管理するクラス ----
 class WOController

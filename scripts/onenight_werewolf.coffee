@@ -3,6 +3,20 @@
 WO = require('./wo').WO
 
 module.exports = (robot) ->
+	# 指定したユーザーにDMを送る
+	sendDM = (slackUserName , message) ->
+		userId = robot.adapter.client.getUserByName(slackUserName)?.id
+		return unless userId?
+
+		if robot.adapter.client.getDMByID(userId)?
+			robot.send {room: slackUserName}, message
+		else
+			robot.adapter.client.openDM userId
+			# openをハンドルする手段がなさそうなので、仕方なくsetTimeout
+			setTimeout =>
+				robot.send {room: slackUserName}, message
+			, 1000
+
 	controller = new WO.Controller
 
 	# WOを開始する
@@ -22,6 +36,8 @@ module.exports = (robot) ->
 		setTimeout () ->
 			if controller.isOngoing
 				msg.send "受付終了"
+				for member in controller.memberManager.getMembers
+					sendDM( member.name, member.getMessageAtNight() )
 		, sec * 1000
 
 	# WOを中止する

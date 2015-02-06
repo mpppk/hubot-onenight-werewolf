@@ -3,10 +3,14 @@ class WOMember
 	constructor: (name) ->
 		@name = name
 
-	setRole: (roleName) ->
-		@roleName = roleName
+	setRole: (role) ->
+		@role = role
 
 	getRole: () ->
-		@roleName
+		@role
+
+	getMessageAtNight: () ->
+		@role.getMessageAtNight()
+
 
 exports.WOMember = WOMember
