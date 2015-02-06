@@ -16,7 +16,8 @@ module.exports = (robot) ->
 
 		# ゲームを開始したプレイヤーをメンバーに加える
 		name = msg.message.user.name
-		controller.members.addMember( new WO.Member(name) )
+		controller.members.addMember( name )
+		# controller.members.addMember( new WO.Member(name) )
 
 		msg.send "受付開始(残り" + sec + "秒)"
 		setTimeout () ->
@@ -46,7 +47,7 @@ module.exports = (robot) ->
 			msg.send "既に参加中です。"
 			return
 
-		controller.members.addMember( new WO.Member(name) )
+		controller.members.addMember( name )
 		msg.send name + "が参加します!"
 
 	# WOの参加者一覧を確認する

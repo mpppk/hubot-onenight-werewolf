@@ -1,4 +1,5 @@
 	# ---- ゲームの参加者を管理するクラス ----
+Member    = require('./womember').WOMember
 class WOMembers
 	constructor: () ->
 		@members = []
@@ -19,8 +20,8 @@ class WOMembers
 		memberList + "```"
 
 	# メンバーを追加
-	addMember: (member) ->
-		@members.push(member)
+	addMember: (memberName) ->
+		@members.push( new Member(memberName) )
 
 	# メンバーの人数を返す
 	getLength: () ->
