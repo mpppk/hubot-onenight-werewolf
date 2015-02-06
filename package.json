@@ -1,0 +1,14 @@
+{
+  "name": "hubot-onenight-werewolf",
+  "version": "0.0.1",
+  "description": "plugin to play onenight werewolf on hubot.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hubot"
+  ],
+  "author": "mpppk",
+  "license": "ISC"
+}
