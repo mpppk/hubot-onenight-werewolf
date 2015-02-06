@@ -22,6 +22,5 @@ class RoleManager
 		@roles.splice(index, 1)
 		ret
 
-
 exports.Roles       = Roles
 exports.RoleManager = RoleManager
