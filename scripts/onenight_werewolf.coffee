@@ -16,8 +16,7 @@ module.exports = (robot) ->
 
 		# ゲームを開始したプレイヤーをメンバーに加える
 		name = msg.message.user.name
-		controller.members.addMember( name )
-		# controller.members.addMember( new WO.Member(name) )
+		controller.memberManager.addMember( name )
 
 		msg.send "受付開始(残り" + sec + "秒)"
 		setTimeout () ->
@@ -41,13 +40,13 @@ module.exports = (robot) ->
 			return
 
 		name = msg.message.user.name
-		membersName = controller.members.getMembersName()
+		membersName = controller.memberManager.getMembersName()
 
 		if membersName.indexOf(name) >= 0
 			msg.send "既に参加中です。"
 			return
 
-		controller.members.addMember( name )
+		controller.memberManager.addMember( name )
 		msg.send name + "が参加します!"
 
 	# WOの参加者一覧を確認する
@@ -56,4 +55,4 @@ module.exports = (robot) ->
 			msg.send "ゲームが開始されていません。\n先に_werewolf start_でゲームを開始してください。"
 			return
 
-		msg.send controller.members.getMembersList()
+		msg.send controller.memberManager.getMembersList()

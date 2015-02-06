@@ -4,12 +4,14 @@ WOMembers = require('./womembers').WOMembers
 # ---- WOを管理するクラス ----
 class WOController
 	constructor: () ->
-		@members = new WOMembers
+		@memberManager = new WOMembers
 		@isOngoing = false
 		@isWaitingParticipants = false
 
 	# WOを開始する.開始に成功すればtrueを返す
 	start: (sec) =>
+		@memberManager = new WOMembers
+		@roleManager = new RoleManager
 		if @isOngoing
 			return false
 		@isOngoing = true
