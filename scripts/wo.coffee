@@ -1,8 +1,7 @@
 WO = {}
-WO.Member      = require('./womember'    ).WOMember
-WO.Members     = require('./womembers'   ).WOMembers
-WO.Controller  = require('./wocontroller').WOController
-WO.Roles       = require('./worole').Roles
-WO.RoleManager = require('./worole').RoleManager
+WO.Member      = require('./member'        ).Member
+WO.Members     = require('./memberManager' ).MemberManager
+WO.Controller  = require('./controller'    ).Controller
+WO.RoleManager = require('./roleManager'   ).RoleManager
 
 exports.WO = WO

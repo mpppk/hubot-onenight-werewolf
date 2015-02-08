@@ -1,8 +1,8 @@
-Member    = require('./womember').WOMember
-RoleManager = require('./worole').RoleManager
+Member    = require('./member').Member
+RoleManager = require('./roleManager').RoleManager
 
 # ---- ゲームの参加者を管理するクラス ----
-class WOMembers
+class MemberManager
 	constructor: () ->
 		@members = []
 		@roleManager = new RoleManager
@@ -46,4 +46,4 @@ class WOMembers
 		index = Math.floor( Math.random() * @members.length );
 		@members[index]
 
-exports.WOMembers = WOMembers
+exports.MemberManager = MemberManager

@@ -1,17 +1,17 @@
 # WOMember  = require('./womember').WOMember
-WOMembers = require('./womembers').WOMembers
-RoleManager = require('./worole').RoleManager
+MemberManager = require('./memberManager').MemberManager
+RoleManager = require('./roleManager').RoleManager
 
 # ---- WOを管理するクラス ----
-class WOController
+class Controller
 	constructor: () ->
-		@memberManager = new WOMembers
+		@memberManager = new MemberManager
 		@isOngoing = false
 		@isWaitingParticipants = false
 
 	# WOを開始する.開始に成功すればtrueを返す
 	start: (sec) =>
-		@memberManager = new WOMembers
+		@memberManager = new MemberManager
 		@roleManager = new RoleManager
 		if @isOngoing
 			return false
@@ -30,5 +30,5 @@ class WOController
 	reset: () ->
 		@isOngoing = false
 
-exports.WOController = WOController
+exports.Controller = Controller
 

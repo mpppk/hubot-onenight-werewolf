@@ -1,5 +1,5 @@
 	# ---- 参加者を表すクラス ----
-class WOMember
+class Member
 	constructor: (@name, @manager) ->
 
 	setRole: (@role) ->
@@ -9,7 +9,7 @@ class WOMember
 	getRole: () ->
 		@role
 
-	getMessageAtNight: (memberManager) ->
-		@role.getMessageAtNight(@name, memberManager)
+	getMessageAtNight: () ->
+		@role.getMessageAtNight(@name, @manager)
 
-exports.WOMember = WOMember
+exports.Member = Member
