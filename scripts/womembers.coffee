@@ -23,13 +23,27 @@ class WOMembers
 		memberList + "```"
 
 	# メンバーを追加
-	addMember: (memberName) ->
-		member = new Member(memberName)
+	addMember: (memberName) =>
+		member = new Member(memberName, this)
 		member.setRole( @roleManager.popRole() )
 		@members.push( member )
 
 	# メンバーの人数を返す
 	getLength: () ->
 		@members.length
+
+	# 指定した役職を持つメンバーインスタンスの配列を返す
+	getMembersByRoleName: (roleName) ->
+		ret = []
+		for member in @members
+			console.log member.getRole().name
+			if member.getRole().name == roleName
+				ret.push( member )
+		ret
+
+	# ランダムにメンバーインスタンスを返す
+	getMemberByRandom: () ->
+		index = Math.floor( Math.random() * @members.length );
+		@members[index]
 
 exports.WOMembers = WOMembers

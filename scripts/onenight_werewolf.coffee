@@ -36,8 +36,9 @@ module.exports = (robot) ->
 		setTimeout () ->
 			if controller.isOngoing
 				msg.send "受付終了"
-				for member in controller.memberManager.getMembers
+				for member in controller.memberManager.getMembers()
 					sendDM( member.name, member.getMessageAtNight() )
+					console.log member.name + "に次のメッセージを送りました.\n" + member.getMessageAtNight(controller.memberManager)
 		, sec * 1000
 
 	# WOを中止する

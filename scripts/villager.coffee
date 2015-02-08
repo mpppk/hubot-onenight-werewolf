@@ -7,11 +7,15 @@ class Villager
 	getName: () ->
 		@name
 
+	setAssignedMemberName: (@assignedMemberName) ->
+	setMemberManager: (@memberManager) ->
+
 	# 夜の間に行う行動
 	workAtNight: () ->
 
 	# 夜に表示するメッセージ
-	getMessageAtNight: (controller) ->
-		"あなたは#{@name}です。"
+	getMessageAtNight: (assignedMemberName, memberManager) ->
+		msg = "あなたは#{@name}です。"
+		return msg
 
 exports.Villager = Villager

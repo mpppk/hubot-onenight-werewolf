@@ -7,11 +7,25 @@ class Werewolf
 	getName: () ->
 		@name
 
+	setAssignedMemberName: (@assignedMemberName) ->
+	setMemberManager: (@memberManager) ->
+
 	# 夜の間に行う行動
 	workAtNight: () ->
 
 	# 夜に表示するメッセージ
-	getMessageAtNight: (controller) ->
-		"あなたは#{@name}です。"
+	getMessageAtNight: (assignedMemberName, memberManager) ->
+		msg = "あなたは#{@name}です。"
+		werewolfMembers = memberManager.getMembersByRoleName(@name)
+
+		if werewolfMembers.length <= 1
+			return msg + "\n他の#{@name}はいません。"
+		
+		msg += "\n他の#{@name}は"
+		for werewolfMember in werewolfMembers
+			if werewolfMember.name != assignedMemberName
+				msg += werewolfMember.name
+
+		return msg + "です。"
 
 exports.Werewolf = Werewolf
