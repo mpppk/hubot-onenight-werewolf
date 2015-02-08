@@ -14,7 +14,7 @@ class Villager
 	workAtNight: () ->
 
 	# 夜に表示するメッセージ
-	getMessageAtNight: (assignedMemberName, memberManager) ->
+	getMessageAtNight: () ->
 		msg = "あなたは#{@name}です。"
 		return msg
 

@@ -14,7 +14,7 @@ class Robber
 	workAtNight: () ->
 
 	# 夜に表示するメッセージ
-	getMessageAtNight: (assignedMemberName, memberManager) ->
+	getMessageAtNight: () ->
 		msg = "あなたは#{@name}です。"
 		# TODO 他のプレイヤーをランダムに選択し、役職を入れ替える	
 		return msg

@@ -14,16 +14,16 @@ class Werewolf
 	workAtNight: () ->
 
 	# 夜に表示するメッセージ
-	getMessageAtNight: (assignedMemberName, memberManager) ->
+	getMessageAtNight: () ->
 		msg = "あなたは#{@name}です。"
-		werewolfMembers = memberManager.getMembersByRoleName(@name)
+		werewolfMembers = @memberManager.getMembersByRoleName(@name)
 
 		if werewolfMembers.length <= 1
 			return msg + "\n他の#{@name}はいません。"
 		
 		msg += "\n他の#{@name}は"
 		for werewolfMember in werewolfMembers
-			if werewolfMember.name != assignedMemberName
+			if werewolfMember.name != @assignedMemberName
 				msg += werewolfMember.name
 
 		return msg + "です。"
