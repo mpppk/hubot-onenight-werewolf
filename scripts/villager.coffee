@@ -1,21 +1,21 @@
 class Villager
-	@num:  4
+  @num:  4
 
-	constructor: () ->
-		@name = "村人"
+  constructor: () ->
+    @name = "村人"
 
-	getName: () ->
-		@name
+  getName: () ->
+    @name
 
-	setAssignedMemberName: (@assignedMemberName) ->
-	setMemberManager: (@memberManager) ->
+  setAssignedMemberName: (@assignedMemberName) ->
+  setMemberManager: (@memberManager) ->
 
-	# 夜の間に行う行動
-	workAtNight: () ->
+  # 夜の間に行う行動
+  workAtNight: () ->
 
-	# 夜に表示するメッセージ
-	getMessageAtNight: () ->
-		msg = "あなたは#{@name}です。"
-		return msg
+  # 夜に表示するメッセージ
+  getMessageAtNight: () ->
+    msg = "あなたは#{@name}です。"
+    return msg
 
 exports.Villager = Villager

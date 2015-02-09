@@ -1,15 +1,15 @@
-	# ---- 参加者を表すクラス ----
+  # ---- 参加者を表すクラス ----
 class Member
-	constructor: (@name, @manager) ->
+  constructor: (@name, @manager) ->
 
-	setRole: (@role) ->
-		@role.setAssignedMemberName(@name)
-		@role.setMemberManager(@manager)
+  setRole: (@role) ->
+    @role.setAssignedMemberName(@name)
+    @role.setMemberManager(@manager)
 
-	getRole: () ->
-		@role
+  getRole: () ->
+    @role
 
-	getMessageAtNight: () ->
-		@role.getMessageAtNight(@name, @manager)
+  getMessageAtNight: () ->
+    @role.getMessageAtNight(@name, @manager)
 
 exports.Member = Member
