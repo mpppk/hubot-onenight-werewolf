@@ -9,6 +9,10 @@
   "keywords": [
     "hubot"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mpppk/hubot-onenight-werewolf"
+  },
   "author": "mpppk",
   "license": "MIT",
   "devDependencies": {
