@@ -13,7 +13,7 @@ module.exports = (robot) ->
     else
       robot.adapter.client.openDM userId
       # openをハンドルする手段がなさそうなので、仕方なくsetTimeout
-      setTimeout =>
+      setTimeout ->
         robot.send {room: slackUserName}, message
       , 1000
 
@@ -38,7 +38,8 @@ module.exports = (robot) ->
         msg.send "受付終了"
         for member in controller.memberManager.getMembers()
           sendDM( member.name, member.getMessageAtNight() )
-          console.log member.name + "に次のメッセージを送りました.\n" + member.getMessageAtNight(controller.memberManager)
+          console.log member.name + "に次のメッセージを送りました.\n" +
+          member.getMessageAtNight(controller.memberManager)
     , sec * 1000
 
   # WOを中止する

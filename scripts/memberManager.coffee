@@ -43,7 +43,7 @@ class MemberManager
 
   # ランダムにメンバーインスタンスを返す
   getMemberByRandom: () ->
-    index = Math.floor( Math.random() * @members.length );
+    index = Math.floor( Math.random() * @members.length )
     @members[index]
 
 exports.MemberManager = MemberManager
