@@ -12,4 +12,14 @@ class Member
   getMessageAtNight: () ->
     @role.getMessageAtNight(@name, @manager)
 
+  workAtNight: () ->
+    if @role.workAtNight?
+      @role.workAtNight(@name, @manager)
+
+  getMessageAfterNight: () ->
+    if @role.getMessageAfterNight?
+      return @role.getMessageAfterNight(@name, @manager)
+    else
+      return null
+
 exports.Member = Member

@@ -15,7 +15,7 @@ module.exports = (robot) ->
       # openをハンドルする手段がなさそうなので、仕方なくsetTimeout
       setTimeout ->
         robot.send {room: slackUserName}, message
-      , 1000
+      , 5000
 
   controller = new WO.Controller
 
@@ -37,9 +37,13 @@ module.exports = (robot) ->
       if controller.isOngoing
         msg.send "受付終了"
         for member in controller.memberManager.getMembers()
-          sendDM( member.name, member.getMessageAtNight() )
+          messageAtNight = member.getMessageAtNight()
+          sendDM( member.name, messageAtNight )
+          member.workAtNight()
+          messageAfterNight = member.getMessageAfterNight() | ""
+          sendDM( member.name, messageAfterNight )
           console.log member.name + "に次のメッセージを送りました.\n" +
-          member.getMessageAtNight(controller.memberManager)
+          messageAtNight + messageAfterNight
     , sec * 1000
 
   # WOを中止する

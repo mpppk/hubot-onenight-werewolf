@@ -7,9 +7,11 @@ should = require('should')
 describe 'MemberManager', () ->
   it 'add member', ->
     manager = new WO.MemberManager
-    manager.addMember("testUser1")
-    manager.addMember("testUser2")
-    manager.getLength().should.equal 2
+    roleNum = manager.roleManager.roleNum
+
+    for i in [0...roleNum]
+      manager.addMember("testUser#{i}")
+    manager.getLength().should.equal roleNum
     
   it 'get members name', ->
     manager = new WO.MemberManager

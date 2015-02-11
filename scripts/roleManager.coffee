@@ -7,8 +7,10 @@ Roles.Robber   = require('./robber'  ).Robber
 # ---- 役職を管理するクラス ----
 class RoleManager
   constructor: () ->
-    @roles = []
+    @roles   = []
+    @roleNum = 0
     for cn, c of Roles
+      @roleNum += c.num
       for i in [0...c.num]
         @roles.push(new c)
 

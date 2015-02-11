@@ -36,14 +36,29 @@ class MemberManager
   getMembersByRoleName: (roleName) ->
     ret = []
     for member in @members
-      console.log member.getRole().name
       if member.getRole().name == roleName
         ret.push( member )
     ret
+
+  # 与えられた名前を持つメンバーのインスタンスを返す
+  getMemberByName: (name) ->
+    for member in @members
+      if member.name == name
+        return member
 
   # ランダムにメンバーインスタンスを返す
   getMemberByRandom: () ->
     index = Math.floor( Math.random() * @members.length )
     @members[index]
+
+  # 指定した名前のメンバー以外のメンバーインスタンスをランダムに返す
+  getMemberByRandomWithout: (name, maxIter = 1000) ->
+    for i in [0..maxIter]
+      otherMember = this.getMemberByRandom()
+      if otherMember.name != name
+        return otherMember
+    console.log "Member.ManagergetMemberByRandomWithout()" +
+    "can't find other member."
+    return null
 
 exports.MemberManager = MemberManager
