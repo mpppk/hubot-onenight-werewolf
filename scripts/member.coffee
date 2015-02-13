@@ -1,6 +1,8 @@
   # ---- 参加者を表すクラス ----
 class Member
   constructor: (@name, @manager) ->
+    @votesCast = 0     # このメンバーの得票数
+    @isVoted   = false # このメンバーが投票を行ったかどうか
 
   setRole: (@role) ->
     @role.setAssignedMemberName(@name)

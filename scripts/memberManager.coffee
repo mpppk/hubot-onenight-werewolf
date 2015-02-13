@@ -61,4 +61,11 @@ class MemberManager
     "can't find other member."
     return null
 
+  # 投票総数を返す
+  getVotesCast: () ->
+    sum = 0
+    for member in @members
+      sum += member.votesCast
+    sum
+
 exports.MemberManager = MemberManager

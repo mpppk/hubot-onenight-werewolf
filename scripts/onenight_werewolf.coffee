@@ -3,10 +3,15 @@
 WO = require('./wo').WO
 
 module.exports = (robot) ->
+  controller = new WO.Controller
+
   # 指定したユーザーにDMを送る
   sendDM = (slackUserName , message) ->
-    userId = robot.adapter.client.getUserByName(slackUserName)?.id
-    return unless userId?
+    userId = robot.adapter.client?.getUserByName(slackUserName)?.id
+    unless userId?
+      console.log "fail to send DM\n" +
+      "destUser: #{slackUserName}\nmessage: #{message}"
+      return
 
     if robot.adapter.client.getDMByID(userId)?
       robot.send {room: slackUserName}, message
@@ -15,9 +20,37 @@ module.exports = (robot) ->
       # openをハンドルする手段がなさそうなので、仕方なくsetTimeout
       setTimeout ->
         robot.send {room: slackUserName}, message
+        console.log "#{slackUserName}に次の内容でDMを送りました。\n" + message
       , 5000
 
-  controller = new WO.Controller
+  # 議論の終了
+  finishVoting = (msg) ->
+    msg.send "投票が終了しました。"
+
+  # 議論の開始
+  startDiscuss = (msg) ->
+    msg.send "議論を開始してください"
+    setTimeout () ->
+      msg.send "議論時間が終了しました。投票を行ってください。"
+      controller.acceptVoting(finishVoting.bind(null, msg))
+    , controller.discussionTime * 1000
+
+  # 受付終了時の処理
+  finishAcceptance = (msg) ->
+    if controller.isOngoing
+      msg.send "受付終了"
+      for member in controller.memberManager.getMembers()
+        messageAtNight = member.getMessageAtNight()
+        sendDM( member.name, messageAtNight )
+        
+      for member in controller.memberManager.getMembers()
+        member.workAtNight()
+        
+      for member in controller.memberManager.getMembers()
+        messageAfterNight = member.getMessageAfterNight() | ""
+        sendDM( member.name, messageAfterNight )
+      
+      startDiscuss(msg)
 
   # WOを開始する
   robot.hear /[werewolf|w] start ?([0-9]*)/i, (msg) ->
@@ -34,16 +67,7 @@ module.exports = (robot) ->
 
     msg.send "受付開始(残り" + sec + "秒)"
     setTimeout () ->
-      if controller.isOngoing
-        msg.send "受付終了"
-        for member in controller.memberManager.getMembers()
-          messageAtNight = member.getMessageAtNight()
-          sendDM( member.name, messageAtNight )
-          member.workAtNight()
-          messageAfterNight = member.getMessageAfterNight() | ""
-          sendDM( member.name, messageAfterNight )
-          console.log member.name + "に次のメッセージを送りました.\n" +
-          messageAtNight + messageAfterNight
+      finishAcceptance(msg)
     , sec * 1000
 
   # WOを中止する
@@ -78,3 +102,10 @@ module.exports = (robot) ->
       return
 
     msg.send controller.memberManager.getMembersList()
+
+  robot.hear /[werewolf|w] vote (\w+)/i, (msg) ->
+    unless controller.isOngoing
+      msg.send "ゲームが開始されていません。\n先に_werewolf start_でゲームを開始してください。"
+      return
+    
+    msg.send controller.vote( msg.message.user.name, msg.match[1] )
