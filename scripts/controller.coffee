@@ -1,14 +1,18 @@
 # WOMember  = require('./womember').WOMember
-MemberManager = require('./memberManager').MemberManager
-RoleManager = require('./roleManager').RoleManager
+MemberManager   = require('./memberManager').MemberManager
+RoleManager     = require('./roleManager').RoleManager
+MessageManager  = require('./messageManager').MessageManager.Japanese
+Errors          = require('./error').Errors
 
 # ---- WOを管理するクラス ----
 class Controller
-  constructor: () ->
-    @memberManager         = new MemberManager
-    @isOngoing             = false
-    @isWaitingParticipants = false
-    @discussionTime        = 1
+  constructor: (@eventListener) ->
+    @memberManager           = new MemberManager
+    @messageManager          = new MessageManager
+    @isOngoing               = false
+    @isWaitingParticipants   = false
+    @discussionTime          = 1
+    @votingCheckIntervalTime = 3
 
     @VOTING_STATE = {
       waiting: "waiting" # 投票開始前
@@ -19,26 +23,53 @@ class Controller
     # 投票受付状態を格納する.
     @votingState = @VOTING_STATE.waiting
 
-  # WOを開始する.開始に成功すればtrueを返す
-  start: (sec) =>
+  checkGoing: () =>
+    unless @isOngoing
+      throw new Errors.
+      GameError( @messageManager.gameDoesNotStart() )
+
+  # 参加者の受付を開始する.
+  startAcceptingMember: (name, sec) =>
+    if @isOngoing
+      throw new Errors.
+      GameError( @messageManager.alreadyGameStarted() )
+
     @memberManager = new MemberManager
     @roleManager   = new RoleManager
-    if @isOngoing
-      return false
-    @isOngoing = true
-    this.waitParticipants(sec)
-    true
 
-  # 指定された時間だけ参加者を受け付ける
-  waitParticipants: (sec) ->
+    @isOngoing             = true
     @isWaitingParticipants = true
+
+    @eventListener?.onStartAccepting( [@messageManager.startAccepting( sec )] )
+
+    self = this
     setTimeout () ->
-      @isWaitingParticipants = false
+      self.isWaitingParticipants = false
+      self.finishAcceptingMember()
     , sec * 1000
 
+    # ゲームを開始したプレイヤーをメンバーに加える
+    @memberManager.addMember( name )
+    true
+
+  # 参加者の受付終了時の処理を行う
+  finishAcceptingMember: () =>
+    private_messages = this.workAtNight()
+
+    public_messages =
+    [@messageManager.finishAccepting(), @messageManager.startDiscussion()]
+
+    @eventListener?.onFinishAccepting( public_messages, private_messages )
+
+    self = this
+    setTimeout () ->
+      self.acceptVoting()
+    , @discussionTime * 1000
+
   # ゲーム開始前の状態にリセットする
-  reset: () ->
+  reset: () =>
     @isOngoing = false
+    @messageManager.terminateGame()
 
   # 投票が終了したかどうかを確認し、現在の状態を返す.
   checkVoting: () =>
@@ -48,32 +79,71 @@ class Controller
     @votingState
 
   # 投票を受け付ける. 投票が終了したらcallbackを呼び出す
-  acceptVoting: (callback) ->
+  acceptVoting: () =>
+    messages = [@messageManager.finishDisucussion()]
+    @eventListener?.onFinishDiscussion( messages )
+
     self = this
     @votingState = @VOTING_STATE.accept
     @timerID = setInterval( () ->
       if self.checkVoting() == self.VOTING_STATE.finish
-        callback()
-    , 3000 )
+        self.finishVoting()
+    , @votingCheckIntervalTime * 1000 )
+
+  finishVoting: () =>
+    messages = [@messageManager.finishVoting()]
+    @eventListener?.onFinishVoting(messages)
+
+  # 参加中のメンバーの名前を返す.
+  getMembersList: () =>
+    this.checkGoing()
+    return @memberManager.getMembersList()
+
+  # メンバーを追加し、メッセージを返す
+  join: (name) =>
+    this.checkGoing()
+    unless @isWaitingParticipants
+      throw new Errors.
+      JoinError( @messageManager.acceptingIsAlreadyFinished() )
+
+    membersName = @memberManager.getMembersName()
+    if membersName.indexOf(name) >= 0
+      throw new Errors.
+      JoinError( @messageManager.alreadyJoined() )
+
+    @memberManager.addMember( name )
+    return @messageManager.memberJoined( name )
+
+  workAtNight: () =>
+    this.checkGoing()
+    @memberManager.workAtNight()
 
   # nameがtargetNameに投票を行う
-  vote: (name, targetName) ->
+  vote: (name, targetName) =>
+    this.checkGoing()
+
     switch @votingState
-      when @VOTING_STATE.waiting then return "まだ投票は受け付けていません。"
-      when @VOTING_STATE.finish  then return "投票は既に終了しています。"
+      when @VOTING_STATE.waiting
+        throw new Errors.
+        VoteError( @messageManager.voteIsNotYetAccepted() )
+      when @VOTING_STATE.finish
+        throw new Errors.
+        VoteError( @messageManager.voteIsAlreadyFinished() )
 
     member       = @memberManager.getMemberByName(name)
     targetMember = @memberManager.getMemberByName(targetName)
 
     if member.isVoted
-      return "既に投票済みです。"
+      throw new Errors.
+      VoteError( @messageManager.alreadyVoted() )
 
     unless targetMember?
-      return "指定した名前のプレイヤーは存在しません。"
+      throw new Errors.
+      VoteError( @messageManager.targetPlayerDoNotExist() )
 
     targetMember.votesCast++
     member.isVoted = true
-    return targetName + "に投票しました。"
+    @eventListener?.onVote( [@messageManager.vote( targetName )] )
 
 exports.Controller = Controller
 

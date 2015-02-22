@@ -16,7 +16,7 @@ module.exports = (grunt) ->
       all:
         src: ['test/**/*.coffee']
       options:
-        reporter: 'nyan'
+        reporter: 'spec'
         ui: 'bdd'
 
     watch:

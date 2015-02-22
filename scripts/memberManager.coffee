@@ -61,6 +61,19 @@ class MemberManager
     "can't find other member."
     return null
 
+  # 各メンバーの夜の行動を行う。各メンバーごとのメッセージのハッシュを返す。
+  workAtNight: () ->
+    msgs = {}
+    for member in @members
+      msgs[member.name] = member.getMessageAtNight()
+
+    member.workAtNight() for member in @members
+    
+    for member in @members
+      if member.getMessageAfterNight()?
+        msgs[member.name] += "\n" + member.getMessageAfterNight()
+    msgs
+
   # 投票総数を返す
   getVotesCast: () ->
     sum = 0
