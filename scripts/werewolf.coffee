@@ -1,8 +1,7 @@
 class Werewolf
   @num:  2
-
   constructor: () ->
-    @name = "人狼"
+    @name = "Werewolf"
 
   getName: () ->
     @name
@@ -14,9 +13,10 @@ class Werewolf
   workAtNight: () ->
 
   # 夜に表示するメッセージ
-  getMessageAtNight: () ->
+  getMessageAtNight: (messageManager) ->
     msg = "あなたは#{@name}です。"
     werewolfMembers = @memberManager.getMembersByRoleName(@name)
+    # messageManager.werewolfMessageAtNight(werewolfMembers)
 
     if werewolfMembers.length <= 1
       return msg + "\n他の#{@name}はいません。"

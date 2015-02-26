@@ -1,4 +1,5 @@
-Member    = require('./member').Member
+Member      = require('./member').Member
+Roles       = require('./roleManager').Roles
 RoleManager = require('./roleManager').RoleManager
 
 # ---- ゲームの参加者を管理するクラス ----
@@ -6,9 +7,6 @@ class MemberManager
   constructor: () ->
     @members = []
     @roleManager = new RoleManager
-
-  getMembers: () ->
-    @members
 
   # 全てのメンバーの名前を格納した配列を返す
   getMembersName: () ->
@@ -32,11 +30,14 @@ class MemberManager
   getLength: () ->
     @members.length
 
+  getMaxVotesCast: () =>
+    this.getMostVotedMembers()[0].votesCast
+
   # 指定した役職を持つメンバーインスタンスの配列を返す
   getMembersByRoleName: (roleName) ->
     ret = []
     for member in @members
-      if member.getRole().name == roleName
+      if member.role.name == roleName
         ret.push( member )
     ret
 
@@ -61,16 +62,27 @@ class MemberManager
     "can't find other member."
     return null
 
+  # 最も多く得票しているメンバーのインスタンスの配列を返す。
+  getMostVotedMembers: () ->
+    retMembers   = []
+    maxVotesCast = 0
+    for member in @members
+      if member.votesCast > maxVotesCast
+        retMembers = [member]
+      else if member.votesCast == maxVotesCast
+        retMembers.push member
+    retMembers
+
   # 各メンバーの夜の行動を行う。各メンバーごとのメッセージのハッシュを返す。
-  workAtNight: () ->
+  workAtNight: (messageManager) ->
     msgs = {}
     for member in @members
-      msgs[member.name] = member.getMessageAtNight()
+      msgs[member.name] = member.getMessageAtNight(messageManager)
 
     member.workAtNight() for member in @members
     
     for member in @members
-      if member.getMessageAfterNight()?
+      if member.getMessageAfterNight(messageManager)?
         msgs[member.name] += "\n" + member.getMessageAfterNight()
     msgs
 
@@ -80,5 +92,45 @@ class MemberManager
     for member in @members
       sum += member.votesCast
     sum
+
+  # 投票の結果を文字列で返す
+  getVotingResult: () ->
+    result = {}
+    for member in @members
+      result[member.name] = member.votedMembersName
+    result
+
+  # 投票の結果を文字列で返す
+  getVotingResultMessage: (messageFunc) ->
+    unless messageFunc?
+      throw TypeError("messageFunc is not exist.
+       (in MemberManager.getVotingResultMessage())")
+
+    messages = ""
+    for member in @members
+      messages += messageFunc(member.name, member.votedMembersName) + "\n"
+    messages
+
+  # 勝利したチーム名を返す
+  # 人狼側が勝利していた場合      -> "werewolf"
+  # 村人側が勝利していた場合      -> "human"
+  # 平和村だったが処刑を行った場合 -> "lostPeace"
+  # 平和村で処刑を行わなかった場合 -> "peace"
+  getWiningTeamName: () ->
+    werewolfName = Roles.Werewolf.name
+    werewolfs    = this.getMembersByRoleName(werewolfName)
+    maxVotesCast = this.getMaxVotesCast()
+
+    # 平和村だった場合
+    if werewolfs.length == 0
+      return if maxVotesCast > 1 then "lostPeace" else "peace"
+
+    humanWinFlag = true
+    for werewolf in werewolfs
+      if werewolf.votesCast < maxVotesCast
+        humanWinFlag = false
+        break
+    if humanWinFlag then "werewolf" else "human"
+
 
 exports.MemberManager = MemberManager

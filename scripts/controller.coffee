@@ -1,5 +1,6 @@
 # WOMember  = require('./womember').WOMember
 MemberManager   = require('./memberManager').MemberManager
+Roles           = require('./roleManager').Roles
 RoleManager     = require('./roleManager').RoleManager
 MessageManager  = require('./messageManager').MessageManager.Japanese
 Errors          = require('./error').Errors
@@ -92,6 +93,13 @@ class Controller
 
   finishVoting: () =>
     messages = [@messageManager.finishVoting()]
+    mostVotedMembers = @memberManager.getMostVotedMembers()
+    messages.push @messageManager.winningTeamIs( this.getWiningTeamName() )
+    messages.push @messageManager.hang( mostVotedMembers )
+    for name, votedMembersName of @memberManager.getVotingResult()
+      messages.push @messageManager.votingResult( name, votedMembersName )
+
+    # messages.push this.getVotingResultMessage(@messageManager.votingResult)
     @eventListener?.onFinishVoting(messages)
 
   # 参加中のメンバーの名前を返す.
@@ -133,6 +141,14 @@ class Controller
     member       = @memberManager.getMemberByName(name)
     targetMember = @memberManager.getMemberByName(targetName)
 
+    unless member?
+      throw new Errors.
+      VoteError( @messageManager.targetPlayerDoNotExist(name) )
+
+    unless targetMember?
+      throw new Errors.
+      VoteError( @messageManager.targetPlayerDoNotExist(targetName) )
+
     if member.isVoted
       throw new Errors.
       VoteError( @messageManager.alreadyVoted() )
@@ -141,9 +157,16 @@ class Controller
       throw new Errors.
       VoteError( @messageManager.targetPlayerDoNotExist() )
 
-    targetMember.votesCast++
-    member.isVoted = true
+    member.voteTo targetMember.name
+    targetMember.votedFrom member.name
     @eventListener?.onVote( [@messageManager.vote( targetName )] )
+
+  getVotingResultMessage: () ->
+    @memberManager.getVotingResultMessage(@messageManager.votingResult)
+
+  getWiningTeamName: () ->
+    this.checkGoing()
+    @memberManager.getWiningTeamName()
 
 exports.Controller = Controller
 

@@ -14,13 +14,13 @@ class Seer
   workAtNight: () ->
 
   # 夜に表示するメッセージ
-  getMessageAtNight: () ->
+  getMessageAtNight: (messageManager) ->
     msg = "あなたは#{@name}です。"
     maxIter = 1000 # 最大試行回数
     for i in [0..maxIter]
       otherMember = @memberManager.getMemberByRandom()
       if otherMember.name != @assignedMemberName
-        roleName = otherMember.getRole().getName()
+        roleName = otherMember.role.getName()
         return msg + "\n#{otherMember.name}の役職を占い、#{roleName}だと分かりました。"
     return "申し訳ありません。エラーが発生しました。ゲームをやり直してください。(Seer couldn't see other player)"
 exports.Seer = Seer

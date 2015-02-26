@@ -19,4 +19,36 @@ describe 'MemberManager', () ->
     manager.addMember("testUser2")
     manager.getMembersName()[0].should.equal "testUser1"
     
-
+describe 'getMaxVotesCast', ->
+  it 'should be success'
+  
+describe 'getMembersByRoleName', ->
+  it 'should be success'
+  
+describe 'getMemberByName', ->
+  it 'should be success'
+  
+describe 'getMemberByRandom', ->
+  it 'should be success'
+  
+describe 'getMemberByRandomWithoutArgumentName', ->
+  it 'should be success'
+  
+describe 'getMostVotedMembers', ->
+  it 'should be success'
+  
+describe 'workAtNight', ->
+  it 'should be success'
+  
+describe 'getVotesCast', ->
+  it 'should be success'
+  
+describe 'getVotingResult', ->
+  it 'should be success'
+  
+describe 'getVotingResultMessage', ->
+  it 'should be success'
+  
+describe 'getWinningTeamName', ->
+  it 'should be success'
+  

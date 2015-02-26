@@ -69,8 +69,6 @@ describe 'Controller', () ->
         setTimeout () ->
           expectState = controller.VOTING_STATE.finish
           controller.votingState.should.be.equal expectState
-          it 'should throw exception when hogehoge.', () ->
-            console.log "hoge"
           done()
         , 20
       , 20
@@ -97,8 +95,8 @@ describe 'Controller', () ->
           controller.votingState.should.be.equal controller.VOTING_STATE.finish
           ( -> controller.vote USER_NAME1, USER_NAME2 ).should.be.throw()
           done()
-        , 10
-      , 10
+        , 20
+      , 20
 
     it 'should throw exception when player already voted.', (done) ->
       controller = new WO.Controller
@@ -110,7 +108,7 @@ describe 'Controller', () ->
         controller.vote(USER_NAME1, USER_NAME2)
         ( -> controller.vote(USER_NAME1, USER_NAME2) ).should.be.throw()
         done()
-      , 10
+      , 20
 
     it 'should throw exception' +
     ' when given name of player doesn\'t exist.', (done) ->
@@ -122,4 +120,4 @@ describe 'Controller', () ->
       setTimeout () ->
         ( -> controller.vote(USER_NAME1, "DO_NOT_EXIST") ).should.be.throw()
         done()
-      , 10
+      , 20

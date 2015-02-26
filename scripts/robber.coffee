@@ -11,7 +11,7 @@ class Robber
   setMemberManager: (@memberManager) ->
 
   # 夜に表示するメッセージ
-  getMessageAtNight: () ->
+  getMessageAtNight: (messageManager) ->
     msg = "あなたは#{@name}です。"
     return msg
 
