@@ -3,33 +3,33 @@
 Errors = require('./error').Errors
 
 class Member
-  constructor: (@name, @manager) ->
+  constructor: (@name, @memberManager) ->
     unless @name?
-      throw TypeError("argument \"name\" don't exist in Member.constructor")
-    unless @manager?
-      throw TypeError("argument \"manager\" don't
+      throw TypeError("argument \"name\" doesn't exist in Member.constructor")
+    unless @memberManager?
+      throw TypeError("argument \"manager\" doesn't
        exist in Member.constructor")
 
     @votesCast = 0     # このメンバーの得票数
     @isVoted   = false # このメンバーが投票を行ったかどうか
     @votedMembersName = []
 
-  setRole: (@role) ->
-    unless @role?
-      throw TypeError("argument \"role\" don't exist in Member.setRole()")
+  # setRole: (@role) ->
+  #   unless @role?
+  #     throw TypeError("argument \"role\" doesn't exist in Member.setRole()")
 
-    @role.setAssignedMemberName(@name)
-    @role.setMemberManager(@manager)
+  #   @role.setAssignedMemberName(@name)
+  #   @role.setMemberManager(@memberManager)
 
-  getMessageAtNight: (messageManager) ->
-    @role.getMessageAtNight(messageManager)
-    # @role.getMessageAtNight(@name, @manager)
+  # getMessageAtNight: (messageManager) ->
+  #   @role.getMessageAtNight(messageManager)
+  #   # @role.getMessageAtNight(@name, @memberManager)
 
-  workAtNight: () ->
-    @role.workAtNight?(@name, @manager)
+  # workAtNight: () ->
+  #   @role.workAtNight?(@name, @memberManager)
 
-  getMessageAfterNight: () ->
-    @role.getMessageAfterNight?(@name, @manager)
+  # getMessageAfterNight: () ->
+  #   @role.getMessageAfterNight?(@name, @memberManager)
 
   # 指定した名前のメンバーに投票する
   voteTo: (memberName) ->

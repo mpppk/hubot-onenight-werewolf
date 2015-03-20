@@ -2,68 +2,68 @@ class JapaneseMessageManager
   constructor: () ->
 
   acceptingIsAlreadyFinished: () ->
-    return "参加者受付は終了しています。次のゲームをお待ちください。"
+    "参加者受付は終了しています。次のゲームをお待ちください。"
 
   alreadyGameStarted: () ->
-    return "ゲームは既に開始しています。"
+    "ゲームは既に開始しています。"
 
   alreadyJoined: () ->
-    return "既に参加中です。"
+    "既に参加中です。"
 
   alreadyVoted: () ->
-    return "既に投票済みです。"
+    "既に投票済みです。"
 
   errorOccurred: () ->
-    return "エラーが発生しました。ゲームをやり直してください。"
+    "エラーが発生しました。ゲームをやり直してください。"
 
   finishAccepting: () ->
-    return "受付が終了しました。"
+    "受付が終了しました。"
 
   finishDisucussion: () ->
-    return "議論時間が終了しました。投票を行ってください。"
+    "議論時間が終了しました。投票を行ってください。"
 
   finishVoting: () ->
-    return "投票が終了しました。"
+    "投票が終了しました。"
 
   gameDoesNotStart: () ->
-    return "ゲームが開始されていません。\n先にゲームを開始してください。"
+    "ゲームが開始されていません。\n先にゲームを開始してください。"
 
   memberJoined: (name) ->
-    return "#{name}が参加します！"
+    "#{name}が参加します！"
 
-  werewolfMessageAtNight: (werewolfMembers) ->
-    msg = "あなたは人狼です。"
-    if werewolfMembers.length <= 1
-      return msg + "\n他の人狼はいません。"
-    
-    msg += "\n他の人狼は"
-    for werewolfMember in werewolfMembers
-      if werewolfMember.name != @assignedMemberName
-        msg += werewolfMember.name
+  robberName: ->
+    "怪盗"
 
-    return msg + "です。"
+  roleAndName: (name, roleName) ->
+    "#{name}は#{roleName}です。"
+
+  seerName: ->
+    "占い師"
 
   startDiscussion: () ->
-    return "議論を開始してください。"
+    "議論を開始してください。"
 
   startAccepting: (sec) ->
-    return "受付開始(残り#{sec}秒)"
+    "受付開始(残り#{sec}秒)"
 
   targetPlayerDoNotExist: (name) ->
     name ?= ""
-    return "指定した名前(#{name})のプレイヤーは存在しません。"
+    "指定した名前(#{name})のプレイヤーは存在しません。"
 
   terminateGame: () ->
-    return "ゲームを中止しました。"
+    "ゲームを中止しました。"
+
+  villagerName: ->
+    "村人"
 
   vote: (name) ->
-    return "#{name}に投票しました。"
+    "#{name}に投票しました。"
 
   voteIsAlreadyFinished: () ->
-    return "投票は既に終了しています。"
+    "投票は既に終了しています。"
 
   voteIsNotYetAccepted: () ->
-    return "まだ投票は受け付けていません。"
+    "まだ投票は受け付けていません。"
 
   votingResult: (targetName, votedMembersName) ->
     methodName = "JapaneseMessageManager.votingResult()"
@@ -94,6 +94,12 @@ class JapaneseMessageManager
       when "werewolf"  then return "人狼チームが勝利しました！"
     "大変申し訳ないのですが、私にも誰が勝ったのか分かりません。
     この村に一体何が起きてしまったのでしょう？"
+
+  werewolfName: ->
+    "人狼"
+
+  youAre: (name) ->
+    "あなたは#{name}です。"
 
 exports.JapaneseMessageManager = JapaneseMessageManager
 

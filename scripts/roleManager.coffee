@@ -6,13 +6,18 @@ Roles.Robber   = require('./robber'  ).Robber
 
 # ---- 役職を管理するクラス ----
 class RoleManager
-  constructor: () ->
+
+  # 村人以外の役職を追加する。
+  constructor: (max) ->
     @roles   = []
     @roleNum = 0
-    for cn, c of Roles
-      @roleNum += c.num
-      for i in [0...c.num]
-        @roles.push(new c)
+    for RoleName, Role of Roles
+      if Role instanceof Roles.Villager then continue
+      @roleNum += Role.num
+      for i in [0...Role.num]
+        @roles.push(new Role)
+
+      while @roleNum
 
   # ランダムに役職のインスタンスを返す。取り出した役職は@rolesから削除される。
   popRole: () =>

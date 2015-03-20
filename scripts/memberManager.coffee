@@ -6,7 +6,10 @@ RoleManager = require('./roleManager').RoleManager
 class MemberManager
   constructor: () ->
     @members = []
-    @roleManager = new RoleManager
+    # @roleManager = new RoleManager
+
+  assignRoleToMembers: ->
+    @roleManager = new RoleManager(@members.length)
 
   # 全てのメンバーの名前を格納した配列を返す
   getMembersName: () ->
@@ -23,7 +26,7 @@ class MemberManager
   # メンバーを追加
   addMember: (memberName) =>
     member = new Member(memberName, this)
-    member.setRole( @roleManager.popRole() )
+    # member.setRole( @roleManager.popRole() )
     @members.push( member )
 
   # メンバーの人数を返す
